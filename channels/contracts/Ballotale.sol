@@ -41,7 +41,7 @@ contract Ballotable {
 
     constructor() public {
         classifiedStatus = ClassifiedStatus.None;
-        nextRoundAt = 0;    // TODO
+        nextRoundAt = now + 5 minutes;    // TODO
         emit BallotRoundStarted(nextRoundAt);
     }
 
