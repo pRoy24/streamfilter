@@ -22,6 +22,7 @@ module.exports  = {
             axios.get(uri).then(function(queryResponse){
                 let htmlData = extractor(queryResponse.data);
                 resItem['content'] = htmlData.text;
+                resItem["queryTerm"] = queryTerm;
                 
                 var content = new NewsContent(resItem);
                 content.save(function (err, res) {
