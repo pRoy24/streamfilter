@@ -13,11 +13,9 @@ router.get('/', function(req, res, next) {
  * Endpoint to query an external aggregation api
  **/
 router.get('/aggregate-news', function(req, res){
-
     QueryNewsSource.getArticleRows("ethereum").then(function(response){
-       res.send({"data": "success"}) 
+       res.send({"data": "success"}); 
     });
-
 });
 
 module.exports = router;
