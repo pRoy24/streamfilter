@@ -17,15 +17,13 @@ class App extends Component {
     return (
       <div className="App">
         <TopNav/>
-        <div>
-        <Router>
-          <div>
-            <Route exact path="/" component={MainFeed}/>
-            <Route path="/about" component={MainFeed}/>
-            <Route path="/train" component={Trainer}/>
-          </div>
-        </Router>
-        </div>
+          <Router>
+            <div>
+              <Route exact path="/" component={MainFeed}/>
+              <Route path="/about" component={MainFeed}/>
+              <Route path="/train" component={Trainer}/>
+            </div>
+          </Router>
       </div>
     );
   }

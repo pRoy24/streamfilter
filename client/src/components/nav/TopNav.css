@@ -1,0 +1,12 @@
+.navbar {
+    background: #fff !important;
+    margin-bottom: 10px !important;
+}
+
+.navbar a {
+    color: #663300;
+}
+
+.nav-no-pad {
+    padding: 0 !important;
+}
