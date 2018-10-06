@@ -18,44 +18,66 @@ contract Ballotable {
     }
 
     struct Ballot {
-        int8 evaluation;
+        EvaluationScore evaluationScore;
+        uint stakingAmount;     // [wei]
         string message;
         uint createdAt;
     }
+
+    struct EvaluationScore {
+        uint8 accuracyScore;
+        uint8 relevantScore;
+    }
     
     uint public nextRoundAt;
-    int8 public evaluatedScore;
-    int8[] public evaluations;
-    mapping (address => bool) private players;
+    address[] private players;
+    address[] public electedPlayers;
+    mapping (address => bool) private playersForExists;
     mapping (address => Ballot) private ballots;
+    mapping (address => uint) public rewards;
+    EvaluationScore[] private evaluations;
+    EvaluationScore public evaluatedScore;
     BallotStatus public ballotStatus;
     ClassifiedStatus public classifiedStatus;
 
     modifier onetimeOnly {
         require(
-            !players[msg.sender],
+            !playersForExists[msg.sender],
             "Only one-time to to call this function."
         );
         _;
     }
 
-    constructor() public {
+    constructor(uint16 roundPeriodSeconds) public {
+        require(
+            roundPeriodSeconds > 1 minutes,
+            "roundPeriodSeconds must be larger than 60."
+        );
+
         classifiedStatus = ClassifiedStatus.None;
-        nextRoundAt = now + 5 minutes;    // TODO
+        ballotStatus = BallotStatus.Open;
+        nextRoundAt = now + roundPeriodSeconds;
         emit BallotRoundStarted(nextRoundAt);
     }
 
-    // -5 <= evaluation <= 5
-    function ballot(int8 evaluation, string message) public onetimeOnly payable {
+    function ballot(uint8 accuracyScore, uint8 relevantScore, string message) public onetimeOnly payable {
         require(
-            evaluation <= 5 && evaluation >= -5,
-            "The value of evaluation must be between -5 and 5."
+            accuracyScore <= 10 && relevantScore <= 10,
+            "The value of each score must be lower than 10."
         );
 
-        evaluations.push(evaluation);
+        players.push(msg.sender);
+        playersForExists[msg.sender] = true;
+
+        EvaluationScore memory _evaluationScore = EvaluationScore({
+            accuracyScore: accuracyScore,
+            relevantScore: relevantScore
+        });
+        evaluations.push(_evaluationScore);
 
         Ballot memory _ballot = Ballot({
-            evaluation: evaluation,
+            evaluationScore: _evaluationScore,
+            stakingAmount: msg.value,
             message: message,
             createdAt: now
         });
@@ -66,11 +88,15 @@ contract Ballotable {
         emit BallotAdded(uint8(evaluations.length));
     }
 
-    function finalizationIfNeeded() public payable {
-        if (now > nextRoundAt) {
+    function finalizationIfNeeded() public {
+        // TODO finalization condition.
+        if (now > nextRoundAt && evaluations.length > 3) {
             evaluatedScore = calculateEvaluatedScore(evaluations);
 
-            if (evaluatedScore > 0) {
+            electContributorsAndSendIfNeeded(evaluatedScore, players);
+
+            // TODO classification algo.
+            if (evaluatedScore.accuracyScore > 2 && evaluatedScore.relevantScore > 2) {
                 classifiedStatus = ClassifiedStatus.Good;
             } else {
                 classifiedStatus = ClassifiedStatus.Bad;
@@ -81,13 +107,49 @@ contract Ballotable {
         }
     }
 
-    function calculateEvaluatedScore(int8[] _evaluations) internal pure returns (int8) {
-        int16 total = 0;
+    function electContributorsAndSendIfNeeded(
+        EvaluationScore _evaluatedScore,
+        address[] _candidatePlayers
+        ) internal {
+
+        uint16 _candidatePlayerslength = uint16(_candidatePlayers.length);
+        for (uint i=0; i < _candidatePlayerslength; i++) {
+            address _player = _candidatePlayers[i];
+            Ballot memory _ballot = ballots[_player];
+            if (
+                _ballot.evaluationScore.accuracyScore >= _evaluatedScore.accuracyScore &&
+                _ballot.evaluationScore.relevantScore >= _evaluatedScore.relevantScore
+            ) {
+                electedPlayers.push(_player);
+            }
+        }
+
+        uint totalStakedAmount = address(this).balance;
+        uint16 _electedPlayerslength = uint16(electedPlayers.length);
+        if (_electedPlayerslength > 0) {
+            uint rewardAmountForEach = totalStakedAmount / _electedPlayerslength;
+            for (uint j=0; j < _electedPlayerslength; j++) {
+                rewards[electedPlayers[j]] = rewardAmountForEach;
+                electedPlayers[j].transfer(rewardAmountForEach);
+            }
+        }
+    }
+
+    function calculateEvaluatedScore(EvaluationScore[] _evaluations) internal pure returns (EvaluationScore) {
+        int16 totalOfAccuracyScore = 0;
+        int16 totalOfRelevantScore = 0;
         uint16 length = uint16(_evaluations.length);
         for (uint16 i=0; i < length; i++) {
-            total += _evaluations[i];
+            totalOfAccuracyScore += _evaluations[i].accuracyScore;
+            totalOfRelevantScore += _evaluations[i].relevantScore;
         }
-        int8 score = int8(total / int16(length));
-        return score;
+        uint8 averageAccuracyScore = uint8(totalOfAccuracyScore / int16(length));
+        uint8 averageRelevantScore = uint8(totalOfRelevantScore / int16(length));
+        
+        EvaluationScore memory _evaluatedScore = EvaluationScore({
+            accuracyScore: averageAccuracyScore,
+            relevantScore: averageRelevantScore
+        });
+        return _evaluatedScore;
     }
 }
