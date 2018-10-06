@@ -1,10 +1,6 @@
 pragma solidity ^0.4.24;
 
-
-// interface
-contract BallotableContent {
-    constructor(address creator, uint contentID) public {}
-}
+import "./BallotableContent.sol";
 
 
 contract ContentsFactory {
@@ -25,7 +21,7 @@ contract ContentsFactory {
     }
 
     function addContent(uint contentID) public returns(address) {
-        BallotableContent _contentContract = new BallotableContent(msg.sender, contentID);
+        BallotableContent _contentContract = new BallotableContent(contentID);
         contentContracts.push(address(_contentContract));
         return address(_contentContract);
     }

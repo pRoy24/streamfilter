@@ -50,7 +50,7 @@ contract Ballotable {
 
     constructor(uint16 roundPeriodSeconds) public {
         require(
-            roundPeriodSeconds > 1 minutes,
+            roundPeriodSeconds >= 1 minutes,
             "roundPeriodSeconds must be larger than 60."
         );
 
