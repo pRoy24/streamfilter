@@ -6,6 +6,7 @@ contract BallotableContents {
 
     struct Ballot {
         EvaluationScore evaluationScore;
+        uint stakingAmount;     // [wei]
         address user;
         uint createdAt;
     }
@@ -15,7 +16,21 @@ contract BallotableContents {
         uint8 relevant;
     }
 
-    mapping (uint => Ballot[]) contentsWithBallot;
+    struct Reward {
+        address targetUser;
+        uint amount;    // [wei]
+    }
+
+    mapping (uint => Ballot[]) private contentsWithBallot;
+    mapping (uint => bool) public contentsStatus;
+
+    modifier isOpen(uint contentID) {
+        require(
+            contentsStatus[contentID],
+            "This content is already finalized."
+        );
+        _;
+    }
 
     function getBallots(
         uint contentID
@@ -23,7 +38,10 @@ contract BallotableContents {
         return contentsWithBallot[contentID];
     }
 
-    function ballot(uint contentID, uint8 accuracy, uint8 relevant, uint timestamp) public {
+    function ballot(
+        uint contentID, uint8 accuracy, uint8 relevant, uint timestamp
+        ) public payable isOpen(contentID) {
+
         EvaluationScore memory _score = EvaluationScore({
             accuracy: accuracy,
             relevant: relevant
@@ -31,10 +49,20 @@ contract BallotableContents {
 
         Ballot memory _ballot = Ballot({
             evaluationScore: _score,
+            stakingAmount: msg.value,
             user: msg.sender,
             createdAt: timestamp
         });
 
         contentsWithBallot[contentID].push(_ballot);
+    }
+
+    function sendRewards(uint contentID, Reward[] rewards) public isOpen(contentID) {
+        contentsStatus[contentID] = false;
+        
+        for (uint i=0; i < rewards.length; i++) {
+            Reward memory _reward = rewards[i];
+            _reward.targetUser.transfer(_reward.amount);
+        }
     }
 }
