@@ -6,7 +6,7 @@ export default class RoomSelect extends Component {
         return (
             <Row className="row-container">
               <Col lg={12}>          
-                <div className="row-heading"><i className="fas fa-globe room-icon"></i>Current Room Ethereum</div>
+                <div className="row-heading"><i className="fas fa-globe room-icon"></i>Fact-Check Ethereum</div>
               </Col>
             </Row>
             )

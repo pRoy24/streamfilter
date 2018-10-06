@@ -37,3 +37,20 @@
     margin-top: 4px;
   
 }
+
+.fact-check-sentence-container{
+   text-align: left;
+   float: left;
+   padding-left: 10px;
+}
+
+.text-sub {
+    font-size: 13px;
+    color: #a9a9a9;
+}
+
+.item-source a {
+    color: #333;
+    padding-left: 0;
+    text-align: left;
+}
