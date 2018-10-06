@@ -12,7 +12,8 @@ var schema = new mongoose.Schema({ source: { id: String, name: String },
       url: String,
       urlToImage: String,
       publishedAt: String,
-      content: String
+      content: String,
+      queryTerm: String
   });
 
 var NewsContent = mongoose.model('NewsContent', schema);

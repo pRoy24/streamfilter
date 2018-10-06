@@ -13,7 +13,8 @@ var schema = new mongoose.Schema({ source: { id: String, name: String },
       urlToImage: String,
       publishedAt: String,
       content: String,
-      isRelevant: Boolean
+      isRelevant: Boolean,
+      queryTerm: String
   });
 
 var LineItem = mongoose.model('LineItem', schema);
