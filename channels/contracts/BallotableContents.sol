@@ -22,11 +22,11 @@ contract BallotableContents {
     }
 
     mapping (uint => Ballot[]) private contentsWithBallot;
-    mapping (uint => bool) public contentsStatus;
+    mapping (uint => bool) public contentsFinalizedStatus;
 
     modifier isOpen(uint contentID) {
         require(
-            contentsStatus[contentID],
+            !contentsFinalizedStatus[contentID],
             "This content is already finalized."
         );
         _;
@@ -58,8 +58,8 @@ contract BallotableContents {
     }
 
     function sendRewards(uint contentID, Reward[] rewards) public isOpen(contentID) {
-        contentsStatus[contentID] = false;
-        
+        contentsFinalizedStatus[contentID] = true;
+
         for (uint i=0; i < rewards.length; i++) {
             Reward memory _reward = rewards[i];
             _reward.targetUser.transfer(_reward.amount);
