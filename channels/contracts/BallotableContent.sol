@@ -4,10 +4,10 @@ import "./Ballotable.sol";
 
 
 contract BallotableContent is Ballotable {
-    address creator;
-    uint contentID;
-    uint createdAt;
-    uint updatedAt;
+    address public creator;
+    uint public contentID;
+    uint public createdAt;
+    uint public updatedAt;
 
     constructor(
         address _creator,
