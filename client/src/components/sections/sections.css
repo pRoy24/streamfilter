@@ -32,7 +32,8 @@
 
 .vote-submit-button {
     border-radius: 4px;
-    background: #a9a9a9;
+    background: #fff;
+    color: black;
     margin-top: 4px;
-    color: white;
+  
 }
