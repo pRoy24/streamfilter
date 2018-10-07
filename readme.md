@@ -7,7 +7,7 @@ Fact-check boards, curated and enforced through cryptoeconomics and open classif
 Content curation and classification today is obtuse and relies heavily on popularity indexes of posts in social-mediums where voting is trivial 
 and the motivation of the curator is not known.
 
-### The motivation behind curation is often unknown-
+### Curation and link-sharing is being done deceptively and people knowingly share half-truths.
 
 The motivation for sharing content ranges from getting more likes/karma (dopamine fuel)
 to more sinister such as maniplating stock-markets, elections etc.
