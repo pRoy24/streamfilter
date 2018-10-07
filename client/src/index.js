@@ -14,7 +14,7 @@ const options = {
     contracts: [
         {
             contractName: 'BallotableContents',
-            web3Contract: new web3.eth.Contract(BallotableContents.abi, "0x92373d7cF03F0b126A48be53B919F26d5b9F927F")
+            web3Contract: new web3.eth.Contract(BallotableContents.abi, "0xf7291d171cb84557cc292600e1fd157415b476d6")
          }
     ] 
 };
