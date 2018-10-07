@@ -73,12 +73,12 @@ class LineItemGrader extends Component {
     }
 
     submitVote() {
-        const { drizzle, drizzleState } = this.props;
-        console.log(this.props);
+        const { drizzle, drizzleState, item } = this.props;
+        console.log(item);
         const {accuracyValue, relevanceValue} = this.state;
         const contract = drizzle.contracts.BallotableContents;
-
-        const stackId = contract.methods["ballot"].cacheSend(accuracyValue, relevanceValue, 3, 4, {
+        const date = Math.round(+new Date()/1000); 
+        const stackId = contract.methods["ballot"].cacheSend(item.contentID, accuracyValue, relevanceValue, date, {
             from: drizzleState.accounts[0], value: 1000000000000000000
 
         });

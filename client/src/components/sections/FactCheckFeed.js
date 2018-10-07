@@ -71,7 +71,7 @@ class RowItemList extends Component {
         let factCheckRows = <span/>;
 
         if (rawLines.length > 0) {
-            factCheckRows = rawLines.slice(0, 2).map(function(item, idx){
+            factCheckRows = rawLines.map(function(item, idx){
                 // Placeholder get random star rating
                 let range = Math.floor(Math.random() * 5) + 1;
                 let starRating = [];

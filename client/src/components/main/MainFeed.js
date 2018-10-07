@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import RoomSelect from '../sections/RoomSelect';
 import RoomViewSelect from '../sections/RoomViewSelect';
 import RoomCurrentFeed from '../sections/RoomCurrentFeed';
-import FactCheckFeed from '../sections/FactCheckFeed';
+import ReaderFeed from '../sections/ReaderFeed';
 import axios from 'axios';
 import {Grid} from 'react-bootstrap';
 
@@ -25,7 +25,7 @@ export default class MainFeed extends Component {
     
     componentWillMount() {
                 const self = this;
-                axios.get("http://34.217.192.198:3011/raw-news-lines").then(function(response){
+                axios.get("http://54.191.132.11:3011/raw-news-lines").then(function(response){
                     self.setState({rawLines: response.data.data});
               });
     }
@@ -35,7 +35,7 @@ export default class MainFeed extends Component {
         const self = this;
         if (prevState.currentView !== currentView) {
             if (currentView === "voting") {
-                axios.get("http://34.217.192.198:3011/raw-news-lines").then(function(response){
+                axios.get("http://54.191.132.11:3011/raw-news-lines").then(function(response){
                     self.setState({rawLines: response.data.data});
                 });
             }
@@ -54,7 +54,7 @@ export default class MainFeed extends Component {
         if (this.state.currentView === "voting") {
             currentFeed = <RoomCurrentFeed rawLines={this.state.rawLines}/>
         } else if (this.state.currentView === "main") {
-            currentFeed = <FactCheckFeed rawLines={this.state.rawLines}/>
+            currentFeed = <ReaderFeed rawLines={this.state.rawLines}/>
         }
         return (
             <Grid>
