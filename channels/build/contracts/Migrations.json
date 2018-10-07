@@ -1374,31 +1374,7 @@
     "name": "solc",
     "version": "0.4.24+commit.e67f0147.Linux.g++"
   },
-  "networks": {
-    "1538874693852": {
-      "events": {},
-      "links": {},
-      "address": "0x28b4c171a212e2959a37c8a487df90265952275a",
-      "transactionHash": "0x21a7e9f1bf3dab2f2bebbfa1356790d6a211700fcebf9b406317a1b577b0b8c8"
-    },
-    "1538875742863": {
-      "events": {},
-      "links": {},
-      "address": "0x94eb856868eb96800fb3960d4e08aec9cdf6848e",
-      "transactionHash": "0x35a3c76bb277b1f9f6aa84db29ef2ff8f9862108a6c00609f41a5024fa79d9d0"
-    },
-    "1538877196484": {
-      "events": {},
-      "links": {},
-      "address": "0x4c99924b96525fb9a1aa1a1e0dfb4ba63c2fafd4",
-      "transactionHash": "0x35a3c76bb277b1f9f6aa84db29ef2ff8f9862108a6c00609f41a5024fa79d9d0"
-    }
-  },
-<<<<<<< HEAD
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-07T01:55:34.767Z"
-=======
+  "networks": {},
   "schemaVersion": "3.0.0-beta.1",
-  "updatedAt": "2018-10-07T03:13:14.191Z"
->>>>>>> 0c0b0e0a407950a8771a35cfdf7404bb6a23443f
+  "updatedAt": "2018-10-07T04:40:53.169Z"
 }
