@@ -1,13 +1,22 @@
 .navbar {
     background: #fff !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 6px !important;
 }
 
 .navbar a {
     color: #663300 !important;
-    font-size: 20px;
+    font-size: 22px;
+    line-height: 1.2em;
+    padding-top: 10px !important;
 }
 
 .nav-no-pad {
     padding: 0 !important;
+}
+
+.create-room-button {
+    background: transparent;
+    margin-right: 16px;
+    margin-top: 6px;
+    border: 1px solid #d3d3d3;
 }

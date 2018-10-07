@@ -78,11 +78,14 @@ class ItemRow extends Component {
         for (var i = 0; i < accuracyScore; i++) {
            starRating.push(<i className="fa fa-star"/>) 
         }
+        let textSentence = item.sentence;
+        
+        
         return (
             <div>
                 <ListGroupItem>
                 <Row>
-                    <Col lg={10}><div className="fact-check-sentence-container">{item.sentence}</div></Col>
+                    <Col lg={10}><div className="fact-check-sentence-container">{textSentence}</div></Col>
                     <Col lg={2}>
                         <div>
                             <span className="text-sub">Rating</span>{starRating}

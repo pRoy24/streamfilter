@@ -3,6 +3,7 @@ import RoomSelect from '../sections/RoomSelect';
 import RoomViewSelect from '../sections/RoomViewSelect';
 import RoomCurrentFeed from '../sections/RoomCurrentFeed';
 import ReaderFeed from '../sections/ReaderFeed';
+import MarketFeed from '../sections/MarketFeed';
 import axios from 'axios';
 import {Grid} from 'react-bootstrap';
 
@@ -15,8 +16,6 @@ export default class MainFeed extends Component {
     }
     
    changeSelectedTopic(value) {
-       console.log(value);
-       console.log("IIU")
        this.setState({currentTopic: value});
    } 
     
@@ -26,6 +25,10 @@ export default class MainFeed extends Component {
     
     showVotingFeed = () => {
         this.setState({currentView: "voting"});
+    }
+    
+    showMarketFeed = () => {
+        this.setState({currentView: "trade"})
     }
     
     componentWillMount() {
@@ -60,10 +63,12 @@ export default class MainFeed extends Component {
             currentFeed = <RoomCurrentFeed rawLines={this.state.rawLines}/>
         } else if (this.state.currentView === "main") {
             currentFeed = <ReaderFeed rawLines={this.state.rawLines}/>
+        } else if (this.state.currentView === "trade") {
+            currentFeed = <MarketFeed/>
         }
         return (
             <Grid>
-                <RoomSelect changeSelectedTopic={this.changeSelectedTopic}/>
+
                 <RoomViewSelect showResultFeed={this.showResultFeed} showVotingFeed={this.showVotingFeed}/>
                 {currentFeed}
             </Grid>

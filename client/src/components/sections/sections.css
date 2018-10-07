@@ -45,7 +45,25 @@
    text-align: left;
    float: left;
    padding-left: 10px;
+   height: 80px;
 }
+
+@media only screen and (max-width: 600px) {
+    .fact-check-sentence-container {
+        height: auto;
+    }
+    .create-room-button {
+        display: none;
+    }
+    
+    .navbar-brand {
+        padding-top: 15px !important;
+    }
+}
+  
+
+
+
 
 .text-sub {
     font-size: 13px;
@@ -110,4 +128,17 @@
 }
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.arrow-icon {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.page-no-label {
+    display: inline-block;
+}
+
+.page-no-label span {
+    margin-bottom: 6px;    
 }
