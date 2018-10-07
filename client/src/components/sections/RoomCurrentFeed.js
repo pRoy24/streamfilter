@@ -79,7 +79,7 @@ class LineItemGrader extends Component {
         const contract = drizzle.contracts.BallotableContents;
         const date = Math.round(+new Date()/1000); 
         const stackId = contract.methods["ballot"].cacheSend(item.contentID, accuracyValue, relevanceValue, date, {
-            from: drizzleState.accounts[0], value: 1000000000000000000
+            from: drizzleState.accounts[0], value: 1000000000000000
 
         });
     }

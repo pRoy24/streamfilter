@@ -25,7 +25,6 @@ router.get('/aggregate-news', function(req, res){
 
 router.get("/raw-news-lines", function(req, res){
     let topic = req.query.q;
-    console.log(topic);
    NewsLines.getRawLines(topic).then(function(response){
        res.send({"data": response});
    });

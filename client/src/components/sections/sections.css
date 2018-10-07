@@ -25,6 +25,7 @@
 }
 .nav-menu {
     border-right: 1px solid #a9a9a9;
+    cursor: pointer;
 }
 
 .no-pad {
