@@ -14,6 +14,7 @@ export default class RoomSelect extends Component {
     }
     
     render() {
+        console.log("HERE");
         let topicOptions = optionList.map(function(item){
             return <option value={item}>{item}</option>
         })
