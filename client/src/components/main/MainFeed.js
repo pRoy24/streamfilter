@@ -25,7 +25,7 @@ export default class MainFeed extends Component {
     
     componentWillMount() {
                 const self = this;
-                axios.get("http://54.191.132.11:3011/raw-news-lines").then(function(response){
+                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
                     self.setState({rawLines: response.data.data});
               });
     }
@@ -35,13 +35,13 @@ export default class MainFeed extends Component {
         const self = this;
         if (prevState.currentView !== currentView) {
             if (currentView === "voting") {
-                axios.get("http://54.191.132.11:3011/raw-news-lines").then(function(response){
+                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
                     self.setState({rawLines: response.data.data});
                 });
             }
             // TODO change this when final view ready
              if (currentView === "main") {
-                axios.get("http://34.217.192.198:3011/raw-news-lines").then(function(response){
+                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
                     self.setState({rawLines: response.data.data});
               });
             }   

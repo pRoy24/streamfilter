@@ -14,7 +14,6 @@ module.exports  = {
       to: currentDate,
       language: 'en',
       sortBy: 'relevancy',
-      page: 2
     }).then(response => {
         response.articles.forEach(function(resItem){
             let uri = resItem.url;
@@ -29,7 +28,6 @@ module.exports  = {
                   if (err) {
                       console.log(err);
                   }
-                  console.log(res);
                 });
 
             }, resItem);

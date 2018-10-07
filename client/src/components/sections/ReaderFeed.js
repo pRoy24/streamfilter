@@ -11,7 +11,7 @@ export default class ReadersFeed extends Component {
       const { drizzle, drizzleState, initialized } = drizzleContext;
   
       if (!initialized) {
-        return "Loading...";
+        return <i className="fa fa-spinner fa-spin"/>
       }
 
       return (
