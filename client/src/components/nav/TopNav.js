@@ -13,7 +13,7 @@ export default class TopNav extends Component {
                       <a href="#">StreamFilter</a>
                     </Navbar.Brand>
                   </Navbar.Header>
-                      
+                        
                 <Nav pullRight>
                     <Button className="create-room-button">
                       Create
