@@ -10,7 +10,7 @@ The motivation often ranges from getting more likes/karma (dopamine fuel)
 to more sinister such as maniplating stock-markets, elections etc.
 
 ### Popularity-indexes are broken-
-because of manipulation and sensationalism sells. Popularity indexes are often the best metric for judging the accuracy of content.
+because manipulation and sensationalism sells. Popularity indexes are not often the best metric for judging the accuracy of content.
 
 
 ### Centralized tech censors content they don't agree with.-
