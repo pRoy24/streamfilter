@@ -119,14 +119,11 @@ contract("BallotableContents", accounts => {
     const accounts = await web3.eth.getAccounts();
     const BallotableContents = getInstance("BallotableContents");
 
-    var scores = [5, 5, 5, 2, 5, 3, 4, 5, 5, 5];
+    var scores = [5, 5, 5, 4, 5, 4, 4, 5, 5, 5];
     const expectedScore = Math.floor(average(scores));
-    var expectedWonPlayers = [];
+    var expectedWonPlayers = accounts;
     for (let account of accounts) {
       var score = scores.pop();
-      if (score > expectedScore) {
-        expectedWonPlayers.push(account);
-      }
 
       await BallotableContents.methods
         .ballot(3, score, score, 100000)
@@ -154,6 +151,52 @@ contract("BallotableContents", accounts => {
       "expectedWonPlayers",
       expectedWonPlayers
     );
+
+    for (let player of rewardWonPlayers) {
+      assert(
+        expectedWonPlayers.includes(player),
+        "The result of rewardWonPlayers is wrong"
+      );
+    }
+  });
+
+  it("get rewards according to accuracy score[Diversed]", async () => {
+    const accounts = await web3.eth.getAccounts();
+    const BallotableContents = getInstance("BallotableContents");
+
+    const scores = [1, 1, 1, 2, 5, 3, 4, 1, 1, 2];
+    const expectedScore = Math.floor(average(scores));
+    const expectedWonPlayerIndexes = [0, 1, 2, 3, 5, 7, 8, 9];
+    var expectedWonPlayers = [];
+    for (var i = 0; i < accounts.length; i++) {
+      let account = accounts[i];
+      var score = scores[i];
+      if (expectedWonPlayerIndexes.includes(i)) {
+        expectedWonPlayers.push(account);
+      }
+
+      await BallotableContents.methods
+        .ballot(4, score, score, 100000)
+        .send({ from: account, gas: 6000000 });
+    }
+
+    const remoteScore = await BallotableContents.methods
+      .getAccuracyScore(4)
+      .call();
+
+    console.log(remoteScore, expectedScore);
+    assert(
+      remoteScore == expectedScore,
+      "The result of accuracyScoore is wrong"
+    );
+
+    var rewardWonPlayers = await BallotableContents.methods
+      .getRewardWonPlayers(4)
+      .call();
+
+    rewardWonPlayers.splice(expectedWonPlayers.length);
+    console.log("rewardWonPlayers:", rewardWonPlayers);
+    console.log("expectedWonPlayers", expectedWonPlayers);
 
     for (let player of rewardWonPlayers) {
       assert(
