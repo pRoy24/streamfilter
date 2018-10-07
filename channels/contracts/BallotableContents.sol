@@ -38,6 +38,7 @@ contract BallotableContents {
     mapping (uint => Ballot[]) private contentsWithBallot;
     mapping (uint => mapping (address => bool)) private playersForExists;
     mapping (uint => address[]) private rewardCandidatePlayers;
+    mapping (uint => address[]) private rewardWonPlayers;
     mapping (uint => EvaluationScore[]) private contentsWithEvaluationScore;
     mapping (uint => bool) public contentsFinalizedStatus;
     mapping (uint => Content) public contents;
@@ -66,6 +67,31 @@ contract BallotableContents {
 
     function getAccuracyScore(uint contentID) public view returns(uint8) {
         return contents[contentID].accuracyScore;
+    }
+
+    function getStakedAmount(uint contentID) public view returns(uint) {
+        return contents[contentID].stakedAmount;
+    }
+
+    function getBallotCount(uint contentID) public view returns(uint) {
+        return contents[contentID].ballotCount;
+    }
+    
+    function getRewardWonPlayers(uint contentID) public view returns(address[]) {
+        return rewardWonPlayers[contentID];
+    }
+
+    function getCloseAt(uint contentID) public view returns(uint) {
+        return contents[contentID].closeAt;
+    }
+
+    function isClosed(uint contentID) public view returns(bool) {
+        if (contentsFinalizedStatus[contentID]) {
+            return true;
+        } else {
+            Content memory _content = contents[contentID];
+            return now > _content.closeAt;
+        }
     }
 
     function ballot(
@@ -126,59 +152,65 @@ contract BallotableContents {
         Content storage _content = contents[contentID];
         _content.accuracyScore = _evaluatedScore.accuracy;
 
-        if (isClosed(contentID) && _content.ballotCount >= 3) {
+        if ((isClosed(contentID) && _content.ballotCount >= 3) || _content.ballotCount >= 10) {
             address[] memory _rewardCandidatePlayers = rewardCandidatePlayers[contentID];
-            electContributorsAndCalcRewardsAndSend(
+            electContributors(
                 contentID,
                 _evaluatedScore, 
                 _rewardCandidatePlayers);
-            
+            calcRewardsAndSend(contentID);
             closeContent(contentID);
         } else {
             // TODO extend time?
         }
     }
 
-    function isClosed(uint contentID) public view returns(bool) {
-        Content memory _content = contents[contentID];
-        return now > _content.closeAt;
-    }
-
     function closeContent(uint contentID) internal {
         contentsFinalizedStatus[contentID] = true;
     }
 
-    function electContributorsAndCalcRewardsAndSend(
+    function electContributors(
         uint contentID,
         EvaluationScore _evaluatedScore,
         address[] _candidatePlayers
-        ) internal {
+        ) internal isOpen(contentID) {
         
         Content storage _content = contents[contentID];
-        address[] storage _electedPlayers;
-
         uint16 _candidatePlayerslength = uint16(_candidatePlayers.length);
+        address[] memory _rewardWonPlayers = new address[](_candidatePlayerslength);
+
+        uint16 _rewardWonPlayersIndex = 0;
+
         for (uint i=0; i < _candidatePlayerslength; i++) {
             address _player = _candidatePlayers[i];
             Ballot memory _ballot = _content.ballots[_player];
-            if (_ballot.evaluationScore.accuracy >= _evaluatedScore.accuracy) {
-                _electedPlayers.push(_player);
+            if (_ballot.evaluationScore.accuracy > _evaluatedScore.accuracy) {
+                _rewardWonPlayers[_rewardWonPlayersIndex] = _player;
+                _rewardWonPlayersIndex++;
             }
         }
 
-        uint16 _electedPlayerslength = uint16(_electedPlayers.length);
-        if (_electedPlayerslength > 0) {
-            uint rewardAmountForEach = _content.stakedAmount / _electedPlayerslength;
-            for (uint j=0; j < _electedPlayerslength; j++) {
+        rewardWonPlayers[contentID] = _rewardWonPlayers;
+    }
+
+    function calcRewardsAndSend(uint contentID) internal isOpen(contentID) {
+        Content storage _content = contents[contentID];
+        address[] memory _rewardWonPlayers = rewardWonPlayers[contentID];
+
+        uint16 _rewardWonPlayerslength = uint16(_rewardWonPlayers.length);
+        if (_rewardWonPlayerslength > 0) {
+            uint rewardAmountForEach = _content.stakedAmount / _rewardWonPlayerslength;
+            for (uint j=0; j < _rewardWonPlayerslength; j++) {
                 // Send reward.
-                _electedPlayers[j].transfer(rewardAmountForEach);
+                _rewardWonPlayers[j].transfer(rewardAmountForEach);
             }
         }
     }
 
     function calculateEvaluatedScore(
         EvaluationScore[] _evaluations) 
-        internal pure returns (EvaluationScore) {
+        internal pure returns(EvaluationScore) 
+        {
         int16 totalOfAccuracyScore = 0;
         int16 totalOfRelevantScore = 0;
         uint16 length = uint16(_evaluations.length);

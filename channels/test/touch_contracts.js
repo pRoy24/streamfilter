@@ -114,4 +114,52 @@ contract("BallotableContents", accounts => {
       "The result of accuracyScoore is wrong"
     );
   });
+
+  it("get rewards according to accuracy score", async () => {
+    const accounts = await web3.eth.getAccounts();
+    const BallotableContents = getInstance("BallotableContents");
+
+    var scores = [5, 5, 5, 2, 5, 3, 4, 5, 5, 5];
+    const expectedScore = Math.floor(average(scores));
+    var expectedWonPlayers = [];
+    for (let account of accounts) {
+      var score = scores.pop();
+      if (score > expectedScore) {
+        expectedWonPlayers.push(account);
+      }
+
+      await BallotableContents.methods
+        .ballot(3, score, score, 100000)
+        .send({ from: account, gas: 6000000 });
+    }
+
+    const remoteScore = await BallotableContents.methods
+      .getAccuracyScore(3)
+      .call();
+
+    console.log(remoteScore, expectedScore);
+    assert(
+      remoteScore == expectedScore,
+      "The result of accuracyScoore is wrong"
+    );
+
+    var rewardWonPlayers = await BallotableContents.methods
+      .getRewardWonPlayers(3)
+      .call();
+
+    rewardWonPlayers.splice(expectedWonPlayers.length);
+    console.log(
+      "rewardWonPlayers:",
+      rewardWonPlayers,
+      "expectedWonPlayers",
+      expectedWonPlayers
+    );
+
+    for (let player of rewardWonPlayers) {
+      assert(
+        expectedWonPlayers.includes(player),
+        "The result of rewardWonPlayers is wrong"
+      );
+    }
+  });
 });
