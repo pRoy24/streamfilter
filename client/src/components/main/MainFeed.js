@@ -10,10 +10,15 @@ export default class MainFeed extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {"currentView": "main", rawLines: []};
-
-        
+        this.state = {"currentView": "main", rawLines: [], "currentTopic": "ethereum"};
+        this.changeSelectedTopic = this.changeSelectedTopic.bind(this);
     }
+    
+   changeSelectedTopic(value) {
+       console.log(value);
+       console.log("IIU")
+       this.setState({currentTopic: value});
+   } 
     
     showResultFeed = () => {
         this.setState({currentView: "main"});
@@ -24,24 +29,24 @@ export default class MainFeed extends Component {
     }
     
     componentWillMount() {
-                const self = this;
-                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
-                    self.setState({rawLines: response.data.data});
-              });
+        const self = this;
+        axios.get(`http://34.220.70.126:3011/raw-news-lines?q=${this.state.currentTopic}`).then(function(response){
+            self.setState({rawLines: response.data.data});
+        });
     }
     
     componentDidUpdate(prevProps, prevState) {
         const {currentView} = this.state;
         const self = this;
-        if (prevState.currentView !== currentView) {
+        if (prevState.currentView !== currentView || prevState.currentTopic !== this.state.currentTopic) {
             if (currentView === "voting") {
-                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
+                axios.get(`http://34.220.70.126:3011/raw-news-lines?q=${this.state.currentTopic}`).then(function(response){
                     self.setState({rawLines: response.data.data});
                 });
             }
             // TODO change this when final view ready
              if (currentView === "main") {
-                axios.get("http://34.220.70.126:3011/raw-news-lines").then(function(response){
+                axios.get(`http://34.220.70.126:3011/raw-news-lines?q=${this.state.currentTopic}`).then(function(response){
                     self.setState({rawLines: response.data.data});
               });
             }   
@@ -58,7 +63,7 @@ export default class MainFeed extends Component {
         }
         return (
             <Grid>
-                <RoomSelect/>
+                <RoomSelect changeSelectedTopic={this.changeSelectedTopic}/>
                 <RoomViewSelect showResultFeed={this.showResultFeed} showVotingFeed={this.showVotingFeed}/>
                 {currentFeed}
             </Grid>

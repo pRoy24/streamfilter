@@ -16,14 +16,17 @@ router.get('/', function(req, res, next) {
  * Endpoint to query an external aggregation api
  **/
 router.get('/aggregate-news', function(req, res){
-    QueryNewsSource.getArticleRows("ethereum").then(function(response){
+    let topic = req.query.q;
+    QueryNewsSource.getArticleRows(topic).then(function(response){
        res.send({"data": "success"}); 
     });
 });
 
 
 router.get("/raw-news-lines", function(req, res){
-   NewsLines.getRawLines("ethereum").then(function(response){
+    let topic = req.query.q;
+    console.log(topic);
+   NewsLines.getRawLines(topic).then(function(response){
        res.send({"data": response});
    });
 });

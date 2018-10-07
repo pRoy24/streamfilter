@@ -25,10 +25,15 @@ export default class ReadersFeed extends Component {
 }
 
 class ReadersFeedApp extends Component {
-    render() {
-
-        const {drizzle, drizzleState, rawLines} = this.props;
+    
+    componentDidMount() {
         console.log(this.props);
+        const {rawLines, drizzle} = this.props;
+        const contract = drizzle.contracts.BallotableContents;
+
+    }
+    render() {
+        const {drizzle, drizzleState, rawLines} = this.props;
         let rowMap = rawLines.map(function(item, idx){
             return <ItemRow drizzle={drizzle} drizzleState={drizzleState} item={item}/>
         })
@@ -80,10 +85,10 @@ class ItemRow extends Component {
                     <Col lg={10}><div className="fact-check-sentence-container">{item.sentence}</div></Col>
                     <Col lg={2}>
                         <div>
-                            <span className="text-sub">Fact Rating</span>{starRating}
+                            <span className="text-sub">Rating</span>{starRating}
                         </div>
                         <div>
-                          <span className="text-sub">Publisher</span><span className="item-source"><a href={item.url}>{item.source.name}</a></span>
+                          <span className="item-source"><a href={item.url}>{item.source.name}</a></span>
                         </div>
                     </Col>
                  </Row>
