@@ -13,8 +13,7 @@ module.exports  = {
       from: yesterday,
       to: currentDate,
       language: 'en',
-      sortBy: 'relevancy',
-      page: 2
+      sortBy: 'relevancy'
     }).then(response => {
         response.articles.forEach(function(resItem){
             let uri = resItem.url;
@@ -29,7 +28,7 @@ module.exports  = {
                   if (err) {
                       console.log(err);
                   }
-                  console.log(res);
+                  console.log("Added post with id "+res._id);
                 });
 
             }, resItem);
