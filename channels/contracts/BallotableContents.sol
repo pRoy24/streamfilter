@@ -36,6 +36,7 @@ contract BallotableContents {
     }
 
     mapping (uint => Ballot[]) private contentsWithBallot;
+    mapping (uint => mapping (address => bool)) private playersForExists;
     mapping (uint => address[]) private rewardCandidatePlayers;
     mapping (uint => EvaluationScore[]) private contentsWithEvaluationScore;
     mapping (uint => bool) public contentsFinalizedStatus;
@@ -45,6 +46,14 @@ contract BallotableContents {
         require(
             !contentsFinalizedStatus[contentID],
             "This content is already finalized."
+        );
+        _;
+    }
+
+    modifier onetimeOnly(uint contentID) {
+        require(
+            !playersForExists[contentID][msg.sender],
+            "Only one-time to to call this function."
         );
         _;
     }
@@ -61,7 +70,12 @@ contract BallotableContents {
 
     function ballot(
         uint contentID, uint8 accuracy, uint8 relevant, uint timestamp
-        ) public payable isOpen(contentID) {
+        ) public payable 
+        isOpen(contentID)
+        onetimeOnly(contentID)
+        {
+
+        playersForExists[contentID][msg.sender] = true;
 
         EvaluationScore memory _score = EvaluationScore({
             accuracy: accuracy,
@@ -162,7 +176,9 @@ contract BallotableContents {
         }
     }
 
-    function calculateEvaluatedScore(EvaluationScore[] _evaluations) internal pure returns (EvaluationScore) {
+    function calculateEvaluatedScore(
+        EvaluationScore[] _evaluations) 
+        internal pure returns (EvaluationScore) {
         int16 totalOfAccuracyScore = 0;
         int16 totalOfRelevantScore = 0;
         uint16 length = uint16(_evaluations.length);

@@ -18,13 +18,16 @@ module.exports = {
       host: "172.31.42.219",
       port: 7545,
       network_id: "*", // Match any network id
-      websockets: true
+      websockets: true,
+      gas: 6000000,
+      gasPrice: 1
     }
   },
   compilers: {
     solc: {
       version: "0.4.24", // ex:  "0.4.20". (Default: Truffle's installed solc)
       docker: true
+      docker: true,
     }
   }
 };

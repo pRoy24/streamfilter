@@ -42,6 +42,20 @@ const { getWeb3, getContractInstance } = require("../helpers");
 const web3 = getWeb3();
 const getInstance = getContractInstance(web3);
 
+var sum = function(arr, fn) {
+  if (fn) {
+    return sum(arr.map(fn));
+  } else {
+    return arr.reduce(function(prev, current, i, arr) {
+      return prev + current;
+    });
+  }
+};
+
+var average = function(arr, fn) {
+  return sum(arr, fn) / arr.length;
+};
+
 contract("BallotableContents", accounts => {
   it("ballot", async () => {
     const BallotableContents = getInstance("BallotableContents");
@@ -50,5 +64,54 @@ contract("BallotableContents", accounts => {
     const ballots = await BallotableContents.methods.getBallots(1).call();
 
     assert.ok(ballots, "add ballot process is wrong.");
+  });
+
+  it("cannot ballot more than once", async () => {
+    const accounts = await web3.eth.getAccounts();
+    const a1 = accounts[0];
+    const BallotableContents = getInstance("BallotableContents");
+
+    console.log("account 1:", a1);
+    await BallotableContents.methods
+      .ballot(1, 5, 5, 100000)
+      .send({ from: a1, gas: 6000000 });
+
+    try {
+      await BallotableContents.methods
+        .ballot(1, 5, 5, 100000)
+        .send({ from: a1, gas: 6000000 });
+      assert(false, "no error thrown.");
+    } catch (err) {
+      console.log("error:", err.message);
+      assert(
+        err.message.includes("Only one-time to to call this function."),
+        "something went to wrong."
+      );
+    }
+  });
+
+  it("calc accuracy score", async () => {
+    const accounts = await web3.eth.getAccounts();
+    const BallotableContents = getInstance("BallotableContents");
+
+    var scores = [];
+    for (let account of accounts) {
+      var score = (Math.floor(Math.random() * 10) % 5) + 1;
+      scores.push(score);
+      await BallotableContents.methods
+        .ballot(2, score, score, 100000)
+        .send({ from: account, gas: 6000000 });
+    }
+
+    const remoteScore = await BallotableContents.methods
+      .getAccuracyScore(2)
+      .call();
+
+    const expectedScore = Math.floor(average(scores));
+    console.log(remoteScore, expectedScore, scores);
+    assert(
+      remoteScore == expectedScore,
+      "The result of accuracyScoore is wrong"
+    );
   });
 });
