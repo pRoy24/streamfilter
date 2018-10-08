@@ -49,8 +49,6 @@ Ethereum based smart-contracts for managing the collateral on rating and distrib
 
 Truffle/Ganache/Drizzle based development suite for developing the smart-contracts.
 
-Amazon Web Services for computing.
-
 ReactJS client.
 
 NodeJS server middleware.
