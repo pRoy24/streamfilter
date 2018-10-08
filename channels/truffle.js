@@ -15,7 +15,7 @@
 module.exports = {
   networks: {
     development: {
-      host: "172.31.42.219",
+      host: "localhost",
       port: 7545,
       network_id: "*", // Match any network id
       websockets: true,
