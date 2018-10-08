@@ -68,7 +68,7 @@ export default class MainFeed extends Component {
         }
         return (
             <Grid>
-
+                <RoomSelect changeSelectedTopic={this.changeSelectedTopic}/>
                 <RoomViewSelect showResultFeed={this.showResultFeed} showVotingFeed={this.showVotingFeed}/>
                 {currentFeed}
             </Grid>

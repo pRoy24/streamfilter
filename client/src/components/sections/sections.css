@@ -79,7 +79,7 @@
 .topic-option-select {
     font-size: 18px !important;
     border: transparent !important;
-    line-height: 1.2em !important;
+    display:inline-block;
 }
 
 

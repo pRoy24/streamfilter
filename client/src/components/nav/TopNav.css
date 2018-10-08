@@ -20,3 +20,9 @@
     margin-top: 6px;
     border: 1px solid #d3d3d3;
 }
+
+.test-net-label {
+    float: right;
+    font-size:11px;
+    display:inline-block;
+}
